@@ -46,6 +46,6 @@
     </ItemGroup>
     <ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.iOS')) ">
         <Compile Include="iOS\**\*.cs" />
-        <PackageReference Include="Scavos.Firebase.iOS.Storage" Version="10.7.0.1" />
+        <PackageReference Include="Scavos.Firebase.iOS.Storage" Version="10.16.0.1" />
     </ItemGroup>
 </Project>
