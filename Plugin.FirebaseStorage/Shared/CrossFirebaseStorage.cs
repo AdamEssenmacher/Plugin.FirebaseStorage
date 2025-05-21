@@ -31,12 +31,12 @@ namespace Plugin.FirebaseStorage
 
         static IFirebaseStorage? CreateFirebaseStorage()
         {
-#if NETSTANDARD
-            return null;
-#else
-#pragma warning disable IDE0022 // Use expression body for methods
+#if ANDROID || IOS
+            #pragma warning disable IDE0022 // Use expression body for methods
             return new FirebaseStorageImplementation();
-#pragma warning restore IDE0022 // Use expression body for methods
+            #pragma warning restore IDE0022 // Use expression body for methods
+#else
+            return null;
 #endif
         }
 
