@@ -21,7 +21,7 @@ namespace Plugin.FirebaseStorage
 
         public string? Md5Hash => _storageMetadata.Md5Hash;
 
-        public string? Path => _storageMetadata.Path;
+        public string Path => _storageMetadata.Path;
 
         public string? Name => _storageMetadata.Name;
 
@@ -41,17 +41,14 @@ namespace Plugin.FirebaseStorage
 
         public string? ContentType => _storageMetadata.ContentType;
 
-        public IDictionary<string, string> CustomMetadata
+        public IDictionary<string, string?> CustomMetadata
         {
             get
             {
-                var customMetadata = new Dictionary<string, string>();
-                if (_storageMetadata.CustomMetadataKeys != null)
+                var customMetadata = new Dictionary<string, string?>();
+                foreach (var key in _storageMetadata.CustomMetadataKeys)
                 {
-                    foreach (var key in _storageMetadata.CustomMetadataKeys)
-                    {
-                        customMetadata.Add(key, _storageMetadata.GetCustomMetadata(key));
-                    }
+                    customMetadata.Add(key, _storageMetadata.GetCustomMetadata(key));
                 }
                 return customMetadata;
             }

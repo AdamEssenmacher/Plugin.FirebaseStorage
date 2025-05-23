@@ -8,7 +8,6 @@ namespace Plugin.FirebaseStorage
         long TotalByteCount { get; }
         IStorageReference Reference { get; }
         IStorageMetadata? Metadata { get; }
-        Uri? UploadSessionUri { get; }
         Exception? Error { get; }
     }
 }

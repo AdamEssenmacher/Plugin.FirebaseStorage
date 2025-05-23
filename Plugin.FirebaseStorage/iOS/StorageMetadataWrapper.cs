@@ -12,11 +12,11 @@ namespace Plugin.FirebaseStorage
             _storageMetadata = storageMetadata ?? throw new ArgumentNullException(nameof(storageMetadata));
         }
 
-        public string? Bucket => _storageMetadata.Bucket;
+        public string Bucket => _storageMetadata.Bucket;
 
-        public string? Generation => _storageMetadata.Generation.ToString();
+        public string Generation => _storageMetadata.Generation.ToString();
 
-        public string? MetadataGeneration => _storageMetadata.Metageneration.ToString();
+        public string MetadataGeneration => _storageMetadata.Metageneration.ToString();
 
         public string? Md5Hash => _storageMetadata.Md5Hash;
 
@@ -40,11 +40,11 @@ namespace Plugin.FirebaseStorage
 
         public string? ContentType => _storageMetadata.ContentType;
 
-        public IDictionary<string, string> CustomMetadata
+        public IDictionary<string, string?> CustomMetadata
         {
             get
             {
-                var customMetadata = new Dictionary<string, string>();
+                var customMetadata = new Dictionary<string, string?>();
                 if (_storageMetadata.CustomMetadata != null)
                 {
                     foreach (var (key, value) in _storageMetadata.CustomMetadata)

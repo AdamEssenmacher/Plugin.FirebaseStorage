@@ -86,6 +86,8 @@ namespace Plugin.FirebaseStorage
                 throw new ArgumentNullException(nameof(filePath));
 
             var uri = Android.Net.Uri.FromFile(new Java.IO.File(filePath));
+            if (uri == null)
+                throw new Exception("uri cannot be null here");
 
             UploadTask uploadTask;
 
@@ -113,7 +115,7 @@ namespace Plugin.FirebaseStorage
                 }
                 else
                 {
-                    tcs.SetException(ExceptionMapper.Map(task.Exception));
+                    tcs.SetException(ExceptionMapper.Map(task.Exception ?? new Exception("Unknown upload error")));
                 }
             }));
 
@@ -122,7 +124,7 @@ namespace Plugin.FirebaseStorage
                 uploadTask.AddOnProgressListener(new OnProgressHandlerListener(snapshot =>
                 {
                     var uploadTaskSnapshot = snapshot.JavaCast<UploadTask.TaskSnapshot>();
-                    progress.Report(new UploadTaskSnapshotWrapper(uploadTaskSnapshot!));
+                    progress.Report(new UploadTaskSnapshotWrapper(uploadTaskSnapshot));
                 }));
             }
 
@@ -153,18 +155,18 @@ namespace Plugin.FirebaseStorage
                     Task.Run(() =>
                     {
                         var ms = new MemoryStream();
-                        downloadTaskSnapshot!.Stream.CopyTo(ms);
+                        downloadTaskSnapshot.Stream.CopyTo(ms);
                         ms.Seek(0, SeekOrigin.Begin);
                         tcs.TrySetResult(ms);
                     })
                     .ContinueWith(t =>
                     {
-                        tcs.TrySetException(t.Exception);
+                        tcs.TrySetException(t.Exception ?? new Exception("Unknown error getting stream"));
                     }, TaskContinuationOptions.OnlyOnFaulted);
                 }
                 else
                 {
-                    tcs.TrySetException(ExceptionMapper.Map(task.Exception));
+                    tcs.TrySetException(ExceptionMapper.Map(task.Exception ?? new Exception("Unknown error getting stream")));
                 }
             }));
 
@@ -173,7 +175,7 @@ namespace Plugin.FirebaseStorage
                 downloadTask.AddOnProgressListener(new OnProgressHandlerListener(snapshot =>
                 {
                     var downloadTaskSnapshot = snapshot.JavaCast<StreamDownloadTask.TaskSnapshot>();
-                    progress.Report(new StreamDownloadTaskSnapshotWrapper(downloadTaskSnapshot!));
+                    progress.Report(new StreamDownloadTaskSnapshotWrapper(downloadTaskSnapshot));
                 }));
             }
 
@@ -191,7 +193,7 @@ namespace Plugin.FirebaseStorage
 
             var downloadTask = _storageReference.GetStream(new StreamProcessor(tcs, maxDownloadSizeBytes));
 
-            downloadTask.AddOnCompleteListener(new OnCompleteHandlerListener(task =>
+            downloadTask.AddOnCompleteListener(new OnCompleteHandlerListener(_ =>
             {
                 if (!tcs.Task.IsCompleted)
                 {
@@ -205,7 +207,7 @@ namespace Plugin.FirebaseStorage
                 downloadTask.AddOnProgressListener(new OnProgressHandlerListener(snapshot =>
                 {
                     var downloadTaskSnapshot = snapshot.JavaCast<StreamDownloadTask.TaskSnapshot>();
-                    progress.Report(new StreamDownloadTaskSnapshotWrapper(downloadTaskSnapshot!));
+                    progress.Report(new StreamDownloadTaskSnapshotWrapper(downloadTaskSnapshot));
                 }));
             }
 
@@ -221,7 +223,11 @@ namespace Plugin.FirebaseStorage
         {
             var tcs = new TaskCompletionSource<bool>();
 
-            var downloadTask = _storageReference.GetFile(Android.Net.Uri.FromFile(new Java.IO.File(filePath)));
+            Android.Net.Uri? uri = Android.Net.Uri.FromFile(new Java.IO.File(filePath));
+            if (uri == null)
+                throw new Exception("uri cannot be null here");
+
+            var downloadTask = _storageReference.GetFile(uri);
 
             downloadTask.AddOnCompleteListener(new OnCompleteHandlerListener(task =>
             {
@@ -231,7 +237,7 @@ namespace Plugin.FirebaseStorage
                 }
                 else
                 {
-                    tcs.SetException(ExceptionMapper.Map(task.Exception));
+                    tcs.SetException(ExceptionMapper.Map(task.Exception ?? new Exception("Unknown error getting file")));
                 }
             }));
 
@@ -240,7 +246,7 @@ namespace Plugin.FirebaseStorage
                 downloadTask.AddOnProgressListener(new OnProgressHandlerListener(snapshot =>
                 {
                     var downloadTaskSnapshot = snapshot.JavaCast<FileDownloadTask.TaskSnapshot>();
-                    progress.Report(new FileDownloadTaskSnapshotWrapper(downloadTaskSnapshot!));
+                    progress.Report(new FileDownloadTaskSnapshotWrapper(downloadTaskSnapshot));
                 }));
             }
 
@@ -252,12 +258,13 @@ namespace Plugin.FirebaseStorage
             return tcs.Task;
         }
 
-        public async Task<Uri> GetDownloadUrlAsync()
+        public async Task<Uri?> GetDownloadUrlAsync()
         {
             try
             {
                 var uri = await _storageReference.GetDownloadUrlAsync().ConfigureAwait(false);
-                return new Uri(uri.ToString());
+                var uriString = uri.ToString();
+                return uriString == null ? null : new Uri(uriString);
             }
             catch (Exception e)
             {
@@ -286,11 +293,11 @@ namespace Plugin.FirebaseStorage
                 if (task.IsSuccessful)
                 {
                     var result = task.Result.JavaCast<StorageMetadata>();
-                    tcs.SetResult(new StorageMetadataWrapper(result!));
+                    tcs.SetResult(new StorageMetadataWrapper(result));
                 }
                 else
                 {
-                    tcs.SetException(ExceptionMapper.Map(task.Exception));
+                    tcs.SetException(ExceptionMapper.Map(task.Exception ?? new Exception("Unknown error getting metadata")));
                 }
             }));
 
@@ -306,11 +313,11 @@ namespace Plugin.FirebaseStorage
                 if (task.IsSuccessful)
                 {
                     var result = task.Result.JavaCast<StorageMetadata>();
-                    tcs.SetResult(new StorageMetadataWrapper(result!));
+                    tcs.SetResult(new StorageMetadataWrapper(result));
                 }
                 else
                 {
-                    tcs.SetException(ExceptionMapper.Map(task.Exception));
+                    tcs.SetException(ExceptionMapper.Map(task.Exception ?? new Exception("Unknown error updating metadata")));
                 }
             }));
 
@@ -392,7 +399,7 @@ namespace Plugin.FirebaseStorage
                 try
                 {
                     var data = new byte[16384];
-                    int n = 0;
+                    int n;
                     long total = 0;
                     while ((n = stream.Read(data, 0, data.Length)) > 0)
                     {
@@ -404,7 +411,7 @@ namespace Plugin.FirebaseStorage
                         buffer.Write(data, 0, n);
                     }
                     buffer.Flush();
-                    _tcs.TrySetResult(buffer.ToByteArray()!);
+                    _tcs.TrySetResult(buffer.ToByteArray());
                 }
                 catch (FirebaseStorageException e)
                 {

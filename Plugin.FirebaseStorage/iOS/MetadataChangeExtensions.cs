@@ -7,8 +7,6 @@ namespace Plugin.FirebaseStorage
     {
         public static StorageMetadata? ToStorageMetadata(this MetadataChange self)
         {
-            if (self == null) return null;
-
             var storageMetadata = new StorageMetadata();
 
             if (self.IsCacheControlChanged)

@@ -23,14 +23,14 @@ namespace Plugin.FirebaseStorage
 
         public bool Equals(PauseToken other)
         {
-            if (_source == null && other._source == null)
+            if (_source == null)
             {
                 return true;
             }
             return _source == other._source;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj is PauseToken pauseToken)
             {

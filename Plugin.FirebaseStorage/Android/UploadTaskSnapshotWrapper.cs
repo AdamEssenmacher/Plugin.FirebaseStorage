@@ -19,7 +19,16 @@ namespace Plugin.FirebaseStorage
 
         public IStorageMetadata? Metadata => _taskSnapshot.Metadata != null ? new StorageMetadataWrapper(_taskSnapshot.Metadata) : null;
 
-        public Uri? UploadSessionUri => _taskSnapshot.UploadSessionUri != null ? new Uri(_taskSnapshot.UploadSessionUri.ToString()) : null;
+        public Uri? UploadSessionUri
+        {
+            get
+            {
+                var uriString = _taskSnapshot.UploadSessionUri?.ToString();
+                return uriString != null
+                    ? new Uri(uriString)
+                    : null;
+            }
+        }
 
         public Exception? Error => _taskSnapshot.Error != null ? ExceptionMapper.Map(_taskSnapshot.Error) : null;
 

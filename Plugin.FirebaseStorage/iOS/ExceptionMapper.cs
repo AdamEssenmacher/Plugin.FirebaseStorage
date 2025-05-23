@@ -9,7 +9,7 @@ namespace Plugin.FirebaseStorage
         public static Exception Map(NSErrorException exception)
         {
             var errorType = ErrorType.Unkown;
-            var errorCode = (StorageErrorCode)(long)exception.Error.Code;
+            var errorCode = (StorageErrorCode)exception.Error.Code;
             switch (errorCode)
             {
                 case StorageErrorCode.BucketNotFound:

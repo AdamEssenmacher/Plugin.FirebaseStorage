@@ -1,4 +1,5 @@
-﻿using Firebase.Storage;
+﻿using System;
+using Firebase.Storage;
 namespace Plugin.FirebaseStorage
 {
     internal static class StorageProvider
@@ -8,6 +9,8 @@ namespace Plugin.FirebaseStorage
         public static StorageWrapper GetStorage(string appName)
         {
             var app = Firebase.Core.App.From(appName);
+            if (app == null)
+                throw new Exception("app not found");
             return GetStorage(Firebase.Storage.Storage.From(app));
         }
 
@@ -19,7 +22,10 @@ namespace Plugin.FirebaseStorage
         public static StorageWrapper GetStorage(string appName, string url)
         {
             var app = Firebase.Core.App.From(appName);
-            return GetStorage(Firebase.Storage.Storage.From(app, url));
+            if (app == null)
+                throw new Exception("app not found");
+            var storage = Firebase.Storage.Storage.From(app, url);
+            return GetStorage(storage);
         }
 
         public static StorageWrapper GetStorage(Storage storage)

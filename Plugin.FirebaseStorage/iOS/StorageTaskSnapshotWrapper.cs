@@ -21,8 +21,6 @@ namespace Plugin.FirebaseStorage
 
         public IStorageMetadata? Metadata => _storageTaskSnapshot.Metadata != null ? new StorageMetadataWrapper(_storageTaskSnapshot.Metadata) : null;
 
-        public Uri? UploadSessionUri { get; }
-
         public Exception? Error => _storageTaskSnapshot.Error != null ? ExceptionMapper.Map(new NSErrorException(_storageTaskSnapshot.Error)) : null;
 
         public override bool Equals(object? obj)

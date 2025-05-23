@@ -15,7 +15,7 @@ namespace Plugin.FirebaseStorage
 
         public void snapshot(Java.Lang.Object p0)
         {
-            _handler?.Invoke(p0);
+            _handler.Invoke(p0);
         }
     }
 }

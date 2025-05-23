@@ -6,12 +6,12 @@ namespace Plugin.FirebaseStorage
     /// </summary>
     public static class CrossFirebaseStorage
     {
-        static Lazy<IFirebaseStorage?> implementation = new Lazy<IFirebaseStorage?>(() => CreateFirebaseStorage(), System.Threading.LazyThreadSafetyMode.PublicationOnly);
+        private static readonly Lazy<IFirebaseStorage?> Implementation = new Lazy<IFirebaseStorage?>(() => CreateFirebaseStorage(), System.Threading.LazyThreadSafetyMode.PublicationOnly);
 
         /// <summary>
         /// Gets if the plugin is supported on the current platform.
         /// </summary>
-        public static bool IsSupported => implementation.Value == null ? false : true;
+        public static bool IsSupported => Implementation.Value == null ? false : true;
 
         /// <summary>
         /// Current plugin implementation to use
@@ -20,7 +20,7 @@ namespace Plugin.FirebaseStorage
         {
             get
             {
-                IFirebaseStorage? ret = implementation.Value;
+                IFirebaseStorage? ret = Implementation.Value;
                 if (ret == null)
                 {
                     throw NotImplementedInReferenceAssembly();
@@ -29,15 +29,9 @@ namespace Plugin.FirebaseStorage
             }
         }
 
-        static IFirebaseStorage? CreateFirebaseStorage()
+        static IFirebaseStorage CreateFirebaseStorage()
         {
-#if ANDROID || IOS
-            #pragma warning disable IDE0022 // Use expression body for methods
             return new FirebaseStorageImplementation();
-            #pragma warning restore IDE0022 // Use expression body for methods
-#else
-            return null;
-#endif
         }
 
         internal static Exception NotImplementedInReferenceAssembly() =>

@@ -24,7 +24,7 @@ namespace Plugin.FirebaseStorage
         Task<Stream> GetStreamAsync(IProgress<IDownloadState>? progress = null, CancellationToken cancellationToken = default);
         Task<byte[]> GetBytesAsync(long maxDownloadSizeBytes, IProgress<IDownloadState>? progress = null, CancellationToken cancellationToken = default);
         Task GetFileAsync(string filePath, IProgress<IDownloadState>? progress = null, CancellationToken cancellationToken = default);
-        Task<Uri> GetDownloadUrlAsync();
+        Task<Uri?> GetDownloadUrlAsync();
         Task DeleteAsync();
         Task<IStorageMetadata> GetMetadataAsync();
         Task<IStorageMetadata> UpdateMetadataAsync(MetadataChange metadata);

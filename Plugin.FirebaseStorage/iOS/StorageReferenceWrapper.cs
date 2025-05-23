@@ -65,7 +65,7 @@ namespace Plugin.FirebaseStorage
             var data = NSData.FromArray(bytes);
             var tcs = new TaskCompletionSource<bool>();
 
-            var uploadTask = _storageReference.PutData(data, metadata?.ToStorageMetadata(), (storageMetadata, error) =>
+            var uploadTask = _storageReference.PutData(data, metadata?.ToStorageMetadata(), (_, error) =>
             {
                 if (error != null)
                 {
@@ -102,7 +102,7 @@ namespace Plugin.FirebaseStorage
 
             var tcs = new TaskCompletionSource<bool>();
 
-            var uploadTask = _storageReference.PutFile(NSUrl.FromFilename(filePath), metadata?.ToStorageMetadata(), (storageMetadata, error) =>
+            var uploadTask = _storageReference.PutFile(NSUrl.FromFilename(filePath), metadata?.ToStorageMetadata(), (_, error) =>
             {
                 if (error != null)
                 {
@@ -176,7 +176,7 @@ namespace Plugin.FirebaseStorage
 
             var tcs = new TaskCompletionSource<bool>();
 
-            var downloadTask = _storageReference.WriteToFile(url, (data, error) =>
+            var downloadTask = _storageReference.WriteToFile(url, (_, error) =>
             {
                 if (error != null)
                 {
@@ -201,12 +201,12 @@ namespace Plugin.FirebaseStorage
             return tcs.Task;
         }
 
-        public async Task<Uri> GetDownloadUrlAsync()
+        public async Task<Uri?> GetDownloadUrlAsync()
         {
             try
             {
                 var url = await _storageReference.GetDownloadUrlAsync().ConfigureAwait(false);
-                return new Uri(url.AbsoluteString);
+                return url.AbsoluteString == null ? null : new Uri(url.AbsoluteString);
             }
             catch (NSErrorException e)
             {
@@ -261,6 +261,7 @@ namespace Plugin.FirebaseStorage
 
             _storageReference.List(maxResults, (result, error) =>
             {
+                // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
                 if (error != null)
                 {
                     tcs.SetException(ExceptionMapper.Map(new NSErrorException(error)));
@@ -280,6 +281,7 @@ namespace Plugin.FirebaseStorage
 
             _storageReference.List(maxResults, pageToken, (result, error) =>
              {
+                 // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
                  if (error != null)
                  {
                      tcs.SetException(ExceptionMapper.Map(new NSErrorException(error)));
@@ -299,6 +301,7 @@ namespace Plugin.FirebaseStorage
 
             _storageReference.ListAll((result, error) =>
             {
+                // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
                 if (error != null)
                 {
                     tcs.SetException(ExceptionMapper.Map(new NSErrorException(error)));
