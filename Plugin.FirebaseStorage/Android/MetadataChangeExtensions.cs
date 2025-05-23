@@ -1,5 +1,4 @@
-﻿using System;
-using Firebase.Storage;
+﻿using Firebase.Storage;
 namespace Plugin.FirebaseStorage
 {
     internal static class MetadataChangeExtensions

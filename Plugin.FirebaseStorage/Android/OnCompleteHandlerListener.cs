@@ -1,5 +1,4 @@
-﻿using System;
-using Android.Gms.Tasks;
+﻿using Android.Gms.Tasks;
 namespace Plugin.FirebaseStorage
 {
     internal delegate void OnCompleteHandler(Task task);

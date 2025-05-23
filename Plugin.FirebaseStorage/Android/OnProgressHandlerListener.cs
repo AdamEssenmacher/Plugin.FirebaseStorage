@@ -1,8 +1,4 @@
-﻿using System;
-using Firebase.Storage;
-using Java.Lang;
-using Android.Runtime;
-using Java.Interop;
+﻿using Firebase.Storage;
 
 namespace Plugin.FirebaseStorage
 {

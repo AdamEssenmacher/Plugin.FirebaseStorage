@@ -1,7 +1,4 @@
-﻿using System;
-using Firebase.Core;
-
-namespace Plugin.FirebaseStorage
+﻿namespace Plugin.FirebaseStorage
 {
     public class FirebaseStorageImplementation : IFirebaseStorage
     {

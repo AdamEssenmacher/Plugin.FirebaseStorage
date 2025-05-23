@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
-
-namespace Plugin.FirebaseStorage
+﻿namespace Plugin.FirebaseStorage
 {
     internal static class StorageProvider
     {

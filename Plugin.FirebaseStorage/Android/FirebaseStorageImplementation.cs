@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-namespace Plugin.FirebaseStorage
+﻿namespace Plugin.FirebaseStorage
 {
     public class FirebaseStorageImplementation : IFirebaseStorage
     {

@@ -1,5 +1,4 @@
-﻿using System;
-using Firebase.Storage;
+﻿using Firebase.Storage;
 using Foundation;
 using System.Linq;
 namespace Plugin.FirebaseStorage
