@@ -24,10 +24,6 @@
         <Copyright>Copyright (c) 2018 f-miyu</Copyright>
         <Nullable>enable</Nullable>
     </PropertyGroup>
-    <PropertyGroup>
-        <IsAotCompatible>true</IsAotCompatible>
-        <ILLinkTreatWarningsAsErrors>true</ILLinkTreatWarningsAsErrors>
-    </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)'=='Debug' ">
         <DebugSymbols>true</DebugSymbols>
     </PropertyGroup>
